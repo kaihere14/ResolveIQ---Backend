@@ -39,8 +39,8 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
+  console.log(req.body);
   const { username, password } = req.body;
-
   try {
     if (!username || !password) {
       throw new ApiError(409, "Both field req");
@@ -57,7 +57,13 @@ const loginUser = async (req, res) => {
 
     return res
       .status(200)
-      .json(new apiResponse(200, { user, accessToken }, "logged in "));
+      .json(
+        new apiResponse(
+          200,
+          { user, accessToken, role: user.role },
+          "logged in "
+        )
+      );
   } catch (error) {
     return res
       .status(error.statusCode || 500)
