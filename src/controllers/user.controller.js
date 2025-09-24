@@ -71,7 +71,6 @@ const loginUser = async (req, res) => {
 };
 
 const adminCode = async (req, res) => {
-  console.log("final");
   return res.status(200).json(new apiResponse(200, "Welcome admin"));
 };
 const userCode = async (req, res) => {
