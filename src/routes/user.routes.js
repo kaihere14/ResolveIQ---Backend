@@ -11,6 +11,6 @@ const router = new Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/adminPanel", verifyJWT, verifyADMIN, adminCode);
+router.get("/admin", verifyJWT, verifyADMIN, adminCode);
 router.post("/userPanel", verifyJWT, userCode);
 export default router;
