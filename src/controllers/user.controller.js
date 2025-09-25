@@ -1,6 +1,7 @@
 import { apiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
 import User from "../models/user.model.js";
+import { send } from "./email.resend.js";
 
 const genAccessRefresh = async (username) => {
   const user = await User.findOne({ username });
@@ -28,6 +29,7 @@ const registerUser = async (req, res) => {
       role,
     });
     await user2.save();
+    const response = await send(user2, password);
     return res
       .status(200)
       .json(new apiResponse(200, user2, "created succesfully"));
@@ -77,4 +79,25 @@ const userCode = async (req, res) => {
   return res.status(200).json(new apiResponse(200, "Welcome User"));
 };
 
-export { registerUser, loginUser, adminCode, userCode };
+const fetchUsers = async (req, res) => {
+  try {
+    // Exclude users with role "admin"
+    const userData = await User.find({ role: { $ne: "admin" } }).select(
+      "username role id email"
+    );
+
+    if (!userData.length) {
+      throw new ApiError(404, "No user registered");
+    }
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, userData, "fetched successfully"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(new apiResponse(error.statusCode || 500, null, error.message));
+  }
+};
+
+export { registerUser, loginUser, adminCode, userCode, fetchUsers };
