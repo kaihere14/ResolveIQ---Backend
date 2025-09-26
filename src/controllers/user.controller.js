@@ -82,9 +82,7 @@ const userCode = async (req, res) => {
 const fetchUsers = async (req, res) => {
   try {
     // Exclude users with role "admin"
-    const userData = await User.find({ role: { $ne: "admin" } }).select(
-      "username role id email"
-    );
+    const userData = await User.find({}).select("username role id email");
 
     if (!userData.length) {
       throw new ApiError(404, "No user registered");

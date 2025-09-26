@@ -15,5 +15,5 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/admin", verifyJWT, verifyADMIN, adminCode);
 router.post("/userPanel", verifyJWT, userCode);
-router.get("/fetchUser", fetchUsers);
+router.get("/fetchUser", verifyJWT, fetchUsers);
 export default router;

@@ -34,5 +34,41 @@ const compalainRegister = async (req, res) => {
     );
   }
 };
-
-export { compalainRegister };
+const complainFetch = async (req, res) => {
+  const { user } = req;
+  try {
+    if (!user) {
+      throw new ApiError(404, "Unbale to find the user");
+    }
+    const complain = await Complain.aggregate([
+      {
+        $lookup: {
+          from: "users", // The collection to join with
+          localField: "user", // Field from the input documents
+          foreignField: "_id", // Field from the documents of the "from" collection
+          as: "userDetails", // Output array field
+        },
+      },
+      {
+        $unwind: "$userDetails", // Deconstructs the userDetails array into individual documents
+      },
+      {
+        $project: {
+          "userDetails.password": 0, // Exclude password from user details
+          "userDetails.refreshToken": 0, // Exclude refreshToken from user details
+        },
+      },
+    ]);
+    if (!complain) {
+      throw new ApiError(404, "no complain found");
+    }
+    return res
+      .status(200)
+      .json(new apiResponse(200, complain, "Fetched Successfully"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(new apiResponse(error.statusCode || 500, null, error.message));
+  }
+};
+export { compalainRegister, complainFetch };

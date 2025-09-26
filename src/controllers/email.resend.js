@@ -1,6 +1,7 @@
 import { Resend } from "resend";
+import "dotenv/config";
 
-const resend = new Resend("re_KKJzoeyD_MMd5MpoUdpvcWVNbdFc9xNGN");
+const resend = new Resend(process.env.RESEND_API);
 
 const send = async (user, accessCode) => {
   const response = await resend.emails.send({
