@@ -2,9 +2,18 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
 import User from "../models/user.model.js";
 import { send } from "./email.resend.js";
+import jwt from "jsonwebtoken";
 
 const genAccessRefresh = async (username) => {
   const user = await User.findOne({ username });
+  const accessToken = await user.genAccessToken(user);
+  const refreshToken = await user.genRefreshToken(user);
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+  return { accessToken, refreshToken };
+};
+const genAccessRefresh2 = async (id) => {
+  const user = await User.findById(id);
   const accessToken = await user.genAccessToken(user);
   const refreshToken = await user.genRefreshToken(user);
   user.refreshToken = refreshToken;
@@ -61,7 +70,7 @@ const loginUser = async (req, res) => {
       .json(
         new apiResponse(
           200,
-          { user, accessToken, role: user.role },
+          { user, accessToken, refreshToken, role: user.role },
           "logged in "
         )
       );
@@ -98,4 +107,45 @@ const fetchUsers = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, adminCode, userCode, fetchUsers };
+const refreshAccess = async (req, res) => {
+  const { refreshToken2 } = req.body;
+  try {
+    if (!refreshToken2) {
+      throw new ApiError(409, "Refresh token not found");
+    }
+    const decode = jwt.verify(refreshToken2, process.env.REFRESH_TOKEN_SECRET);
+    if (!decode) {
+      throw new ApiError(404, "Inavlid/expired refresh token");
+    }
+
+    const { accessToken, refreshToken } = await genAccessRefresh2(decode.data);
+
+    return res
+      .status(200)
+      .json(
+        new apiResponse(
+          200,
+          { accessToken, refreshAccess },
+          "successfully generated new pair of token"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(
+        new ApiError(
+          error.statusCode || 500,
+          error.message || "Internal server error"
+        )
+      );
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  adminCode,
+  userCode,
+  fetchUsers,
+  refreshAccess,
+};

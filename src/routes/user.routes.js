@@ -6,6 +6,7 @@ import {
   adminCode,
   userCode,
   fetchUsers,
+  refreshAccess,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 import { verifyADMIN } from "../middleware/verifyAdmin.js";
@@ -13,6 +14,7 @@ const router = new Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/refresh", refreshAccess);
 router.get("/admin", verifyJWT, verifyADMIN, adminCode);
 router.post("/userPanel", verifyJWT, userCode);
 router.get("/fetchUser", verifyJWT, fetchUsers);
