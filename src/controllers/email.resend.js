@@ -342,4 +342,187 @@ const send = async (user, accessCode) => {
   return response;
 };
 
-export { send };
+const update = async (userDetails, activeStatus) => {
+  const response = await resend.emails.send({
+    from: "ResolveIQ <no-reply@pawpick.store>",
+    to: userDetails.email,
+    subject: `Complaint Status Update - ${activeStatus}`,
+    html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+              }
+              .container {
+                background-color: #ffffff;
+                border: 1px solid #dddddd;
+                border-radius: 5px;
+                padding: 30px;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #f0f0f0;
+                padding-bottom: 20px;
+              }
+              .logo {
+                font-size: 24px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 5px;
+              }
+              .subtitle {
+                font-size: 14px;
+                color: #7f8c8d;
+              }
+              .content {
+                margin-bottom: 30px;
+              }
+              .greeting {
+                font-size: 18px;
+                margin-bottom: 20px;
+                color: #2c3e50;
+              }
+              .message {
+                font-size: 16px;
+                margin-bottom: 25px;
+                color: #555555;
+              }
+              .status-box {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 4px;
+                padding: 20px;
+                margin: 25px 0;
+                text-align: center;
+              }
+              .status-text {
+                font-size: 14px;
+                color: #6c757d;
+                margin-bottom: 8px;
+              }
+              .status-value {
+                font-size: 20px;
+                font-weight: bold;
+                color: #28a745;
+              }
+              .details {
+                margin: 25px 0;
+              }
+              .detail-row {
+                margin-bottom: 10px;
+                padding: 8px 0;
+                border-bottom: 1px solid #f0f0f0;
+              }
+              .detail-label {
+                font-weight: bold;
+                color: #495057;
+                display: inline-block;
+                width: 120px;
+              }
+              .detail-value {
+                color: #333333;
+              }
+              .info-text {
+                background-color: #e7f3ff;
+                border: 1px solid #b8daff;
+                border-radius: 4px;
+                padding: 15px;
+                margin: 25px 0;
+                font-size: 14px;
+                color: #004085;
+              }
+              .closing {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #dddddd;
+              }
+              .closing-text {
+                font-size: 15px;
+                color: #555555;
+                margin-bottom: 15px;
+              }
+              .signature {
+                font-size: 16px;
+                font-weight: bold;
+                color: #2c3e50;
+              }
+              .footer {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #eeeeee;
+                text-align: center;
+                font-size: 12px;
+                color: #888888;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <div class="logo">ResolveIQ</div>
+                <div class="subtitle">Issue Resolution Platform</div>
+              </div>
+              
+              <div class="content">
+                <div class="greeting">
+                  Hello ${userDetails.username},
+                </div>
+                
+                <div class="message">
+                  We wanted to update you on the progress of your complaint. Our team has been working on your case and we have an important status update.
+                </div>
+                
+                <div class="status-box">
+                  <div class="status-text">Current Status</div>
+                  <div class="status-value">${activeStatus}</div>
+                </div>
+                
+                <div class="details">
+                  <div class="detail-row">
+                    <span class="detail-label">Updated On:</span>
+                    <span class="detail-value">${new Date().toLocaleDateString()}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Case Priority:</span>
+                    <span class="detail-value">Standard</span>
+                  </div>
+                </div>
+                
+                <div class="info-text">
+                  You can check your complaint details anytime by logging into your ResolveIQ account dashboard.
+                </div>
+                
+                <div class="closing">
+                  <div class="closing-text">
+                    Thank you for your patience as we work to resolve your issue. If you have any questions, please reply to this email.
+                  </div>
+                  
+                  <div class="signature">
+                    Best regards,<br>
+                    ResolveIQ Support Team
+                  </div>
+                </div>
+              </div>
+              
+              <div class="footer">
+                You received this notification because you have an active complaint with ResolveIQ.
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+  });
+  return response;
+};
+
+export { send, update };
