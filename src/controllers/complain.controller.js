@@ -145,4 +145,40 @@ const changeStatus = async (req, res) => {
       );
   }
 };
-export { compalainRegister, complainFetch, oneComplain, changeStatus };
+
+const addTech = async (req, res) => {
+  const { technicianId, complainId } = req.body;
+  try {
+    if (!technicianId || !complainId) {
+      throw new ApiError(409, "Unable to get tech id");
+    }
+    const complain = await Complain.findById(complainId);
+
+    if (!complain) {
+      throw new ApiError(404, "Failed to find complain");
+    }
+    const user = await User.findById(technicianId);
+    if (!user) {
+      throw new ApiError(404, "Unable to find technician");
+    }
+    complain.technicianId = technicianId;
+    complain.technician = user.username;
+    await complain.save({ validateBeforeSave: false });
+
+    return res
+      .status(200)
+      .json(
+        new apiResponse(200, complain, "technician assigned successfully ")
+      );
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(
+        new ApiError(
+          error.statusCode || 500,
+          error.message || "Internal Server error"
+        )
+      );
+  }
+};
+export { compalainRegister, complainFetch, oneComplain, changeStatus, addTech };

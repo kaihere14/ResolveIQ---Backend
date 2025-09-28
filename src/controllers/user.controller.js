@@ -141,9 +141,6 @@ const refreshAccess = async (req, res) => {
   }
 };
 
-
-
-
 export {
   registerUser,
   loginUser,

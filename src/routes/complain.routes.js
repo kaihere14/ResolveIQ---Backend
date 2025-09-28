@@ -6,6 +6,7 @@ import {
   complainFetch,
   oneComplain,
   changeStatus,
+  addTech,
 } from "../controllers/complain.controller.js";
 
 const router = new Router();
@@ -14,5 +15,6 @@ router.post("/register", verifyJWT, compalainRegister);
 router.get("/fetch", verifyJWT, verifyADMIN, complainFetch);
 router.post("/getOne", verifyJWT, verifyADMIN, oneComplain);
 router.post("/changeStatus", verifyJWT, verifyADMIN, changeStatus);
+router.post("/addtech", verifyJWT, verifyADMIN, addTech);
 
 export default router;
