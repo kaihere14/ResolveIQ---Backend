@@ -16,6 +16,7 @@ app.use(
 
 import user from "./routes/user.routes.js";
 import complain from "./routes/complain.routes.js";
+
 app.use("/api/users", user);
 app.use("/api/complain", complain);
 

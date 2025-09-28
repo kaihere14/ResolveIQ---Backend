@@ -525,4 +525,353 @@ const update = async (userDetails, activeStatus) => {
   return response;
 };
 
-export { send, update };
+const sendOfferEmail = async (offerData, customerEmail) => {
+  const urgencyColors = {
+    normal: "#28a745",
+    high: "#fd7e14",
+    urgent: "#dc3545",
+  };
+
+  const urgencyTexts = {
+    normal: "Special Offer",
+    high: "⏰ Limited Time Offer",
+    urgent: "🚨 URGENT: Ending Soon",
+  };
+
+  const audienceGreeting = {
+    all: "Valued Customer",
+    new: "Welcome to our network",
+    existing: "Dear Loyal Customer",
+    premium: "Premium Member",
+  };
+
+  const response = await resend.emails.send({
+    from: "NetSpeed Pro <no-reply@netspeedpro.com>",
+    to: customerEmail,
+    subject: `${urgencyTexts[offerData.urgency]} - ${offerData.offerTitle}`,
+    html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+              }
+              .container {
+                background-color: #ffffff;
+                border: 1px solid #dddddd;
+                border-radius: 8px;
+                padding: 0;
+                overflow: hidden;
+              }
+              .header {
+                background: linear-gradient(135deg, #000000, #333333);
+                color: white;
+                text-align: center;
+                padding: 30px 20px;
+              }
+              .logo {
+                font-size: 28px;
+                font-weight: bold;
+                margin-bottom: 5px;
+              }
+              .subtitle {
+                font-size: 16px;
+                opacity: 0.9;
+              }
+              .urgency-banner {
+                background-color: ${urgencyColors[offerData.urgency]};
+                color: white;
+                text-align: center;
+                padding: 12px;
+                font-weight: bold;
+                font-size: 16px;
+                margin: 0;
+              }
+              .content {
+                padding: 30px;
+              }
+              .greeting {
+                font-size: 20px;
+                margin-bottom: 20px;
+                color: #2c3e50;
+                font-weight: 600;
+              }
+              .offer-title {
+                font-size: 24px;
+                font-weight: bold;
+                color: #000000;
+                text-align: center;
+                margin: 25px 0;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border-left: 4px solid #000000;
+              }
+              .plan-details {
+                background: linear-gradient(135deg, #000000, #333333);
+                color: white;
+                padding: 25px;
+                border-radius: 8px;
+                text-align: center;
+                margin: 25px 0;
+              }
+              .plan-name {
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 10px;
+              }
+              .speed-display {
+                font-size: 36px;
+                font-weight: bold;
+                margin: 15px 0;
+                color: #ffffff;
+              }
+              .pricing-box {
+                background-color: #ffffff;
+                border: 2px solid #000000;
+                border-radius: 8px;
+                padding: 25px;
+                margin: 25px 0;
+                text-align: center;
+              }
+              .original-price {
+                font-size: 18px;
+                text-decoration: line-through;
+                color: #999999;
+                margin-bottom: 10px;
+              }
+              .discount-price {
+                font-size: 42px;
+                font-weight: bold;
+                color: #28a745;
+                margin: 15px 0;
+              }
+              .discount-badge {
+                background-color: #dc3545;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-weight: bold;
+                font-size: 14px;
+                display: inline-block;
+                margin-top: 10px;
+              }
+              .features-section {
+                margin: 30px 0;
+              }
+              .features-title {
+                font-size: 20px;
+                font-weight: bold;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                text-align: center;
+              }
+              .features-list {
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                padding: 20px;
+              }
+              .feature-item {
+                padding: 8px 0;
+                border-bottom: 1px solid #dee2e6;
+                font-size: 15px;
+                color: #495057;
+              }
+              .feature-item:last-child {
+                border-bottom: none;
+              }
+              .feature-item:before {
+                content: "✓";
+                color: #28a745;
+                font-weight: bold;
+                margin-right: 10px;
+              }
+              .cta-section {
+                text-align: center;
+                margin: 35px 0;
+              }
+              .cta-button {
+                display: inline-block;
+                background: linear-gradient(135deg, #000000, #333333);
+                color: white;
+                padding: 18px 40px;
+                text-decoration: none;
+                border-radius: 25px;
+                font-size: 18px;
+                font-weight: bold;
+                transition: transform 0.3s ease;
+              }
+              .validity-info {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 6px;
+                padding: 15px;
+                margin: 25px 0;
+                text-align: center;
+              }
+              .validity-text {
+                color: #856404;
+                font-weight: bold;
+                font-size: 14px;
+              }
+              .terms-section {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #dddddd;
+              }
+              .terms-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #495057;
+                margin-bottom: 10px;
+              }
+              .terms-text {
+                font-size: 13px;
+                color: #6c757d;
+                line-height: 1.5;
+              }
+              .closing {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #dddddd;
+              }
+              .closing-text {
+                font-size: 15px;
+                color: #555555;
+                margin-bottom: 15px;
+              }
+              .signature {
+                font-size: 16px;
+                font-weight: bold;
+                color: #2c3e50;
+              }
+              .footer {
+                background-color: #f8f9fa;
+                padding: 20px;
+                text-align: center;
+                font-size: 12px;
+                color: #6c757d;
+                margin-top: 0;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <div class="logo">NetSpeed Pro</div>
+                <div class="subtitle">High-Speed Internet Solutions</div>
+              </div>
+              
+              ${
+                offerData.urgency !== "normal"
+                  ? `<div class="urgency-banner">${
+                      urgencyTexts[offerData.urgency]
+                    }</div>`
+                  : ""
+              }
+              
+              <div class="content">
+                <div class="greeting">
+                  Hello ${audienceGreeting[offerData.targetAudience]},
+                </div>
+                
+                <div class="offer-title">
+                  ${offerData.offerTitle}
+                </div>
+                
+                <div class="plan-details">
+                  <div class="plan-name">${offerData.planName}</div>
+                  <div class="speed-display">${offerData.speed} ${
+      offerData.speedUnit
+    }</div>
+                  <div style="font-size: 16px; opacity: 0.9;">Lightning Fast Internet</div>
+                </div>
+                
+                <div class="pricing-box">
+                  <div class="original-price">Regular Price: $${
+                    offerData.originalPrice
+                  }/month</div>
+                  <div class="discount-price">$${
+                    offerData.discountedPrice
+                  }/month</div>
+                  <div class="discount-badge">SAVE ${
+                    offerData.discountPercentage
+                  }%</div>
+                </div>
+                
+                <div class="features-section">
+                  <div class="features-title">What's Included</div>
+                  <div class="features-list">
+                    ${offerData.features
+                      .map(
+                        (feature) =>
+                          `<div class="feature-item">${feature}</div>`
+                      )
+                      .join("")}
+                  </div>
+                </div>
+                
+                <div class="cta-section">
+                  <a href="#" class="cta-button">Get This Deal Now</a>
+                </div>
+                
+                <div class="validity-info">
+                  <div class="validity-text">
+                    ⏰ Offer valid until ${new Date(
+                      offerData.validUntil
+                    ).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </div>
+                </div>
+                
+                ${
+                  offerData.terms
+                    ? `
+                <div class="terms-section">
+                  <div class="terms-title">Terms & Conditions:</div>
+                  <div class="terms-text">${offerData.terms}</div>
+                </div>`
+                    : ""
+                }
+                
+                <div class="closing">
+                  <div class="closing-text">
+                    Don't miss out on this incredible internet deal! Contact us today to upgrade your connection and enjoy blazing-fast speeds.
+                  </div>
+                  
+                  <div class="signature">
+                    Best regards,<br>
+                    NetSpeed Pro Team<br>
+                    📞 1-800-NET-SPEED<br>
+                    🌐 support@netspeedpro.com
+                  </div>
+                </div>
+              </div>
+              
+              <div class="footer">
+                You received this offer because you are a valued NetSpeed Pro customer. 
+                <br>If you no longer wish to receive promotional emails, <a href="#">unsubscribe here</a>.
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+  });
+
+  return response;
+};
+
+export { send, update, sendOfferEmail };
