@@ -141,6 +141,31 @@ const refreshAccess = async (req, res) => {
   }
 };
 
+const checkRole = async (req, res) => {
+  const { user } = req;
+  const id = user._id;
+
+  try {
+    if (!id) {
+      throw new ApiError(409, "Unable to get the  id");
+    }
+    const user = await User.find(id).select("role -_id");
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+    return res.status(200).json(new apiResponse(200, user, "role send back"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(
+        new ApiError(
+          error.statusCode || 500,
+          error.message || "Internal server error"
+        )
+      );
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -148,4 +173,5 @@ export {
   userCode,
   fetchUsers,
   refreshAccess,
+  checkRole,
 };
