@@ -16,9 +16,11 @@ app.use(
 
 import user from "./routes/user.routes.js";
 import complain from "./routes/complain.routes.js";
+import technician from "./routes/technician.routes.js";
 
 app.use("/api/users", user);
 app.use("/api/complain", complain);
+app.use("/api/technician", technician);
 
 const trying = async () => {
   try {
