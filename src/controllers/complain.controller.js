@@ -163,6 +163,8 @@ const addTech = async (req, res) => {
     }
     complain.technicianId = technicianId;
     complain.technician = user.username;
+
+    const mail = await updateTech(user.email, complain);
     await complain.save({ validateBeforeSave: false });
 
     return res

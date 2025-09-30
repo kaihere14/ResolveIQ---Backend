@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import Complain from "../models/complain.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import { update } from "./email.resend.js";
 
 const fetchComplain = async (req, res) => {
   const { user } = req;
@@ -39,6 +40,7 @@ const fetchTechnician = async (req, res) => {
 };
 
 const changeStatus = async (req, res) => {
+  console.log("changeStatus");
   const { id } = req.body;
   try {
     if (!id) {
@@ -46,9 +48,9 @@ const changeStatus = async (req, res) => {
     }
     const complain = await Complain.findById(id);
     const user = await User.findById(complain.user);
-    const mail = await update(user, complain.activeStatus);
     complain.activeStatus = "completed";
     await complain.save({ validateBeforeSave: false });
+    const mail = await update(user, complain.activeStatus);
     return res
       .status(200)
       .json(new apiResponse(200, complain, "Status updated successfully"));

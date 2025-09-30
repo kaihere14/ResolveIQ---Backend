@@ -874,4 +874,12 @@ const sendOfferEmail = async (offerData, customerEmail) => {
   return response;
 };
 
+const updateTech = async (email, complain) => {
+  const response = await resend.emails.send({
+    from: "ResolveIQ <no-reply@pawpick.store>",
+    to: email,
+    subject: `Complaint Status Update - ${complain.activeStatus}`,
+  });
+};
+
 export { send, update, sendOfferEmail };
