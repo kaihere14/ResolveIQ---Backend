@@ -2,7 +2,7 @@ import { apiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
 import User from "../models/user.model.js";
 import Complain from "../models/complain.model.js";
-import { update } from "./email.resend.js";
+import { update, updateTech } from "./email.resend.js";
 import mongoose from "mongoose";
 
 const compalainRegister = async (req, res) => {

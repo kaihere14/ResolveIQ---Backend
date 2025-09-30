@@ -875,11 +875,153 @@ const sendOfferEmail = async (offerData, customerEmail) => {
 };
 
 const updateTech = async (email, complain) => {
+  const assignedUserName =
+    complain?.user?.username || complain?.user?.email || "User";
+  const complainTitle = complain?.title || "New Complaint";
+  const complainStatus = complain?.activeStatus || "ongoing";
+  const complainId = complain?._id || "";
+  const complainDescription =
+    complain?.description || "No description provided.";
+
   const response = await resend.emails.send({
     from: "ResolveIQ <no-reply@pawpick.store>",
     to: email,
-    subject: `Complaint Status Update - ${complain.activeStatus}`,
+    subject: `New Complaint Assigned - ${complainTitle}`,
+    html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f7fb;
+              }
+              .container {
+                background-color: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                overflow: hidden;
+              }
+              .header {
+                background: linear-gradient(135deg, #312e81, #1e40af);
+                color: white;
+                text-align: center;
+                padding: 28px 20px;
+              }
+              .logo {
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: 0.2px;
+              }
+              .subtitle {
+                font-size: 13px;
+                opacity: 0.9;
+                margin-top: 6px;
+              }
+              .content {
+                padding: 24px 24px 6px 24px;
+              }
+              .greeting {
+                font-size: 16px;
+                color: #111827;
+                margin-bottom: 10px;
+                font-weight: 600;
+              }
+              .message {
+                font-size: 14px;
+                color: #374151;
+                margin-bottom: 18px;
+              }
+              .status-box {
+                background-color: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                padding: 14px 16px;
+                margin: 18px 0;
+              }
+              .status-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+              .status-value { font-size: 16px; font-weight: 700; color: #16a34a; margin-top: 4px; }
+              .details { margin-top: 8px; }
+              .detail-row { padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+              .detail-row:last-child { border-bottom: none; }
+              .detail-label { width: 130px; display: inline-block; color: #6b7280; font-weight: 600; }
+              .detail-value { color: #111827; }
+              .description { background: #fafafa; border: 1px solid #eeeeee; border-radius: 6px; padding: 12px; margin-top: 12px; color: #374151; font-size: 14px; }
+              .cta { text-align: center; padding: 22px 24px 28px; }
+              .cta-button {
+                display: inline-block;
+                background-color: #111827;
+                color: #ffffff !important;
+                text-decoration: none;
+                padding: 12px 18px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+              }
+              .footer { text-align: center; font-size: 12px; color: #6b7280; padding: 0 24px 24px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <div class="logo">ResolveIQ</div>
+                <div class="subtitle">New Complaint Assigned to You</div>
+              </div>
+              <div class="content">
+                <div class="greeting">Hello Technician,</div>
+                <div class="message">
+                  A new complaint has been assigned to you from <strong>${assignedUserName}</strong>.
+                </div>
+
+                <div class="status-box">
+                  <div class="status-label">Current Status</div>
+                  <div class="status-value">${complainStatus}</div>
+                </div>
+
+                <div class="details">
+                  <div class="detail-row">
+                    <span class="detail-label">Title:</span>
+                    <span class="detail-value">${complainTitle}</span>
+                  </div>
+                  ${
+                    complainId
+                      ? `
+                  <div class="detail-row">
+                    <span class="detail-label">Complaint ID:</span>
+                    <span class="detail-value">${complainId}</span>
+                  </div>`
+                      : ""
+                  }
+                  <div class="detail-row">
+                    <span class="detail-label">Assigned On:</span>
+                    <span class="detail-value">${new Date().toLocaleString()}</span>
+                  </div>
+                </div>
+
+                ${
+                  complainDescription
+                    ? `<div class="description">${complainDescription}</div>`
+                    : ""
+                }
+              </div>
+  
+              <div class="footer">
+                Please address this complaint promptly. If this was sent in error, contact the administrator.
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
   });
+
+  return response;
 };
 
-export { send, update, sendOfferEmail };
+export { send, update, sendOfferEmail, updateTech };
