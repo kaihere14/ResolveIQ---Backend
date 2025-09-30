@@ -45,6 +45,8 @@ const changeStatus = async (req, res) => {
       throw new ApiError(409, "Complain id not found");
     }
     const complain = await Complain.findById(id);
+    const user = await User.findById(complain.user);
+    const mail = await update(user, complain.activeStatus);
     complain.activeStatus = "completed";
     await complain.save({ validateBeforeSave: false });
     return res
