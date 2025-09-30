@@ -166,6 +166,13 @@ const checkRole = async (req, res) => {
   }
 };
 
+const oneUser = async (req, res) => {
+  const { user } = req;
+  return res
+    .status(200)
+    .json(new apiResponse(200, user, "Profile data fetched"));
+};
+
 export {
   registerUser,
   loginUser,
@@ -174,4 +181,5 @@ export {
   fetchUsers,
   refreshAccess,
   checkRole,
+  oneUser,
 };
