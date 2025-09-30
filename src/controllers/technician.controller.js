@@ -6,47 +6,19 @@ import { apiResponse } from "../utils/apiResponse.js";
 const fetchComplain = async (req, res) => {
   const { user } = req;
   const id = user._id;
-
   try {
     if (!user) {
-      throw new ApiError(409, "Unable to get technician id");
+      throw new ApiError(409, "unable to get technician id");
     }
-
-    const complains = await Complain.aggregate([
-      {
-        $match: { technicianId: id }, // filter by technician
-      },
-      {
-        $lookup: {
-          from: "users", // collection name for User model
-          localField: "user",
-          foreignField: "_id",
-          as: "userData",
-        },
-      },
-      {
-        $unwind: "$userData", // convert array -> object
-      },
-      {
-        $project: {
-          title: 1,
-          description: 1,
-          technicianId: 1,
-          activeStatus: 1,
-          "userData._id": 1,
-          "userData.name": 1,
-          "userData.email": 1,
-        },
-      },
-    ]);
-
-    if (!complains || complains.length === 0) {
+    const complain = await Complain.find({ technicianId: String(id) })
+      .select("title description user technicianId activeStatus")
+      .populate({ path: "user", select: "-password -refreshToken" });
+    if (!complain) {
       throw new ApiError(404, "No complaints found");
     }
-
     return res
       .status(200)
-      .json(new apiResponse(200, complains, "Complaints fetched successfully"));
+      .json(new apiResponse(200, complain, "Complain fetched successfully"));
   } catch (error) {
     return res
       .status(error.statusCode || 500)
@@ -66,4 +38,27 @@ const fetchTechnician = async (req, res) => {
     .json(new apiResponse(200, user, "Technician fetched successfully"));
 };
 
-export { fetchComplain, fetchTechnician };
+const changeStatus = async (req, res) => {
+  const { id } = req.body;
+  try {
+    if (!id) {
+      throw new ApiError(409, "Complain id not found");
+    }
+    const complain = await Complain.findById(id);
+    complain.activeStatus = "completed";
+    await complain.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new apiResponse(200, complain, "Status updated successfully"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(
+        new ApiError(
+          error.statusCode || 500,
+          error.message || "Internal server error"
+        )
+      );
+  }
+};
+export { fetchComplain, fetchTechnician, changeStatus };
