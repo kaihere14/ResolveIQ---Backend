@@ -18,6 +18,7 @@ const compalainRegister = async (req, res) => {
       description,
       status,
       user,
+      verifyOtp: Math.floor(100000 + Math.random() * 900000),
     });
 
     const saved = await complain.save();
@@ -130,7 +131,11 @@ const changeStatus = async (req, res) => {
     }
     complain.activeStatus = status;
     await complain.save({ validateBeforeSave: false });
-    const mail = await update(userDetails, complain.activeStatus);
+    const mail = await update(
+      userDetails,
+      complain.activeStatus,
+      complain.verifyOtp
+    );
     return res
       .status(200)
       .json(new apiResponse(200, complain, "status updated successfuly"));

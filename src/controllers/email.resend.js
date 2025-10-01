@@ -342,7 +342,7 @@ const send = async (user, accessCode) => {
   return response;
 };
 
-const update = async (userDetails, activeStatus) => {
+const update = async (userDetails, activeStatus, verifyOtp) => {
   const response = await resend.emails.send({
     from: "ResolveIQ <no-reply@pawpick.store>",
     to: userDetails.email,
@@ -456,6 +456,45 @@ const update = async (userDetails, activeStatus) => {
                 font-weight: bold;
                 color: #2c3e50;
               }
+              .otp-section {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 8px;
+                padding: 25px;
+                margin: 25px 0;
+                text-align: center;
+              }
+              .otp-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #856404;
+                margin-bottom: 15px;
+              }
+              .otp-code {
+                font-size: 32px;
+                font-weight: bold;
+                color: #d63031;
+                background-color: #ffffff;
+                border: 2px solid #d63031;
+                border-radius: 8px;
+                padding: 15px 25px;
+                margin: 15px 0;
+                letter-spacing: 5px;
+                display: inline-block;
+                font-family: 'Courier New', monospace;
+              }
+              .otp-instruction {
+                font-size: 14px;
+                color: #856404;
+                margin-top: 15px;
+                line-height: 1.5;
+              }
+              .otp-warning {
+                font-size: 12px;
+                color: #856404;
+                margin-top: 10px;
+                font-style: italic;
+              }
               .footer {
                 margin-top: 30px;
                 padding-top: 20px;
@@ -500,6 +539,17 @@ const update = async (userDetails, activeStatus) => {
                 
                 <div class="info-text">
                   You can check your complaint details anytime by logging into your ResolveIQ account dashboard.
+                </div>
+                
+                <div class="otp-section">
+                  <div class="otp-title">🔐 Verification Code</div>
+                  <div class="otp-code">${verifyOtp}</div>
+                  <div class="otp-instruction">
+                    Use this verification code to confirm your identity when accessing your complaint details.
+                  </div>
+                  <div class="otp-warning">
+                    This code will expire in 10 minutes. Do not share this code with anyone.
+                  </div>
                 </div>
                 
                 <div class="closing">

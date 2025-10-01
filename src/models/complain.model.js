@@ -18,6 +18,9 @@ const commentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: User,
     },
+    verifyOtp: {
+      type: Number,
+    },
     technician: {
       type: String,
       default: "unassigned",
