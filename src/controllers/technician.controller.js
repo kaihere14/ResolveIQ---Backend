@@ -41,12 +41,15 @@ const fetchTechnician = async (req, res) => {
 
 const changeStatus = async (req, res) => {
   console.log("changeStatus");
-  const { id } = req.body;
+  const { id, verifyOtp } = req.body;
   try {
-    if (!id) {
-      throw new ApiError(409, "Complain id not found");
+    if (!id || !verifyOtp) {
+      throw new ApiError(409, "Complain id or verifyOtp not found");
     }
     const complain = await Complain.findById(id);
+    if (complain.verifyOtp !== verifyOtp) {
+      throw new ApiError(409, "Invalid verifyOtp");
+    }
     const user = await User.findById(complain.user);
     complain.activeStatus = "completed";
     await complain.save({ validateBeforeSave: false });
