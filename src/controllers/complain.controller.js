@@ -18,7 +18,7 @@ const compalainRegister = async (req, res) => {
       description,
       status,
       user,
-      verifyOtp: Math.floor(100000 + Math.random() * 900000),
+      verifyOtp,
     });
 
     const saved = await complain.save();
@@ -124,6 +124,9 @@ const changeStatus = async (req, res) => {
     if (!status || !id) {
       throw new ApiError(409, "Undefined status");
     }
+    const complain2 = await Complain.findById(id);
+    complain2.verifyOtp = Math.floor(100000 + Math.random() * 900000);
+    complain2.save({ validateBeforeSave: false });
     const complain = await Complain.findById(id);
     const userId = complain.user;
     const userDetails = await User.findById(userId);
