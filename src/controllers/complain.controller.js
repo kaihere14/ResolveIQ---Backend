@@ -119,6 +119,7 @@ const oneComplain = async (req, res) => {
 
 const changeStatus = async (req, res) => {
   const { status, id } = req.body;
+  console.log(status, id);
   try {
     if (!status || !id) {
       throw new ApiError(409, "Undefined status");
