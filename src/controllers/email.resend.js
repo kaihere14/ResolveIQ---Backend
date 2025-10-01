@@ -543,9 +543,6 @@ const update = async (userDetails, activeStatus, verifyOtp) => {
                   <div class="otp-instruction">
                     Use this verification code to confirm that the issue has been resolved and mark your complaint as completed.
                   </div>
-                  <div class="otp-warning">
-                    This code will expire in 10 minutes. Do not share this code with anyone.
-                  </div>
                 </div>
                 
                 <div class="info-text">
