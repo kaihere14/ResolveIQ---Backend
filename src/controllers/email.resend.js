@@ -537,19 +537,19 @@ const update = async (userDetails, activeStatus, verifyOtp) => {
                   </div>
                 </div>
                 
-                <div class="info-text">
-                  You can check your complaint details anytime by logging into your ResolveIQ account dashboard.
-                </div>
-                
                 <div class="otp-section">
                   <div class="otp-title">🔐 Verification Code</div>
                   <div class="otp-code">${verifyOtp}</div>
                   <div class="otp-instruction">
-                    Use this verification code to confirm your identity when accessing your complaint details.
+                    Use this verification code to confirm that the issue has been resolved and mark your complaint as completed.
                   </div>
                   <div class="otp-warning">
                     This code will expire in 10 minutes. Do not share this code with anyone.
                   </div>
+                </div>
+                
+                <div class="info-text">
+                  You can check your complaint details anytime by logging into your ResolveIQ account dashboard.
                 </div>
                 
                 <div class="closing">
