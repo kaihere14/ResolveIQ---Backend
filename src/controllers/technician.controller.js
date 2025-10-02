@@ -69,7 +69,6 @@ const changeStatus = async (req, res) => {
 };
 
 const passChange = async (req, res) => {
-
   const { user } = req;
   const id = user._id;
   const { password, prevPassword } = req.body;
@@ -93,12 +92,10 @@ const passChange = async (req, res) => {
   } catch (error) {
     return res
       .status(error.statusCode || 500)
-      .json(
-        new ApiError(
-          error.statusCode || 500,
-          error.message || "Internal server error"
-        )
-      );
+      .json({
+        status: error.statusCode || 500,
+        message: error.message || "Internal Server error",
+      });
   }
 };
 export { fetchComplain, fetchTechnician, changeStatus, passChange };
