@@ -67,4 +67,38 @@ const changeStatus = async (req, res) => {
       );
   }
 };
-export { fetchComplain, fetchTechnician, changeStatus };
+
+const passChange = async (req, res) => {
+
+  const { user } = req;
+  const id = user._id;
+  const { password, prevPassword } = req.body;
+  try {
+    if (!password || !id || !user || !prevPassword) {
+      throw new ApiError(409, "Password or user id not found");
+    }
+    const technician = await User.findById(id);
+    if (!technician) {
+      throw new ApiError(404, "Technician not found");
+    }
+    const isPasswordCorrect = await technician.passVerify(prevPassword);
+    if (!isPasswordCorrect) {
+      throw new ApiError(409, "Invalid previous password");
+    }
+    technician.password = password;
+    await technician.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new apiResponse(200, technician, "Password updated successfully"));
+  } catch (error) {
+    return res
+      .status(error.statusCode || 500)
+      .json(
+        new ApiError(
+          error.statusCode || 500,
+          error.message || "Internal server error"
+        )
+      );
+  }
+};
+export { fetchComplain, fetchTechnician, changeStatus, passChange };

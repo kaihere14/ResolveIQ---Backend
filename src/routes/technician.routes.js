@@ -3,6 +3,7 @@ import {
   fetchComplain,
   fetchTechnician,
   changeStatus,
+  passChange,
 } from "../controllers/technician.controller.js";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 
@@ -11,5 +12,6 @@ const router = new Router();
 router.get("/complainData", verifyJWT, fetchComplain);
 router.get("/technicianData", verifyJWT, fetchTechnician);
 router.post("/changeStatus", verifyJWT, changeStatus);
+router.post("/passChange", verifyJWT, passChange);
 
 export default router;
