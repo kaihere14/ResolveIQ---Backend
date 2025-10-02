@@ -173,6 +173,39 @@ const oneUser = async (req, res) => {
     .json(new apiResponse(200, user, "Profile data fetched"));
 };
 
+const changePass = async (req, res) => {
+  const { user } = req;
+  const { oldPass, newPass } = req.body;
+  const id = user._id;
+  try {
+    if (!user || !id) {
+      throw new ApiError(409, "user or id not found");
+    }
+    if (!oldPass || !newPass) {
+      throw new ApiError(409, "Enter both passwords");
+    }
+
+    const user2 = await User.findById(id);
+    if (!user2) {
+      throw new ApiError(404, "User not found");
+    }
+    const verify = await user2.passVerify(oldPass);
+    if (!verify) {
+      throw new ApiError(404, "Invalid old password");
+    }
+    user2.password = newPass;
+    await user2.save({ validateBeforeSave: false });
+
+    return res
+      .status(200)
+      .json(new apiResponse(200, user2, "Password changed successfully"));
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      message: error.message || "Internal Server Error",
+      status: error.statusCode || 500,
+    });
+  }
+};
 export {
   registerUser,
   loginUser,
@@ -182,4 +215,5 @@ export {
   refreshAccess,
   checkRole,
   oneUser,
+  changePass,
 };

@@ -9,6 +9,7 @@ import {
   refreshAccess,
   checkRole,
   oneUser,
+  changePass,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 import { verifyADMIN } from "../middleware/verifyAdmin.js";
@@ -20,6 +21,7 @@ router.post("/refresh", refreshAccess);
 router.get("/admin", verifyJWT, verifyADMIN, adminCode);
 router.get("/adminProfile", verifyJWT, verifyADMIN, oneUser);
 router.post("/userPanel", verifyJWT, userCode);
+router.post("/changePass", verifyJWT, changePass);
 router.get("/fetchUser", verifyJWT, fetchUsers);
 router.get("/checkRole", verifyJWT, checkRole);
 export default router;
