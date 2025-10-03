@@ -7,12 +7,14 @@ import {
   oneComplain,
   changeStatus,
   addTech,
+  userComplain,
 } from "../controllers/complain.controller.js";
 
 const router = new Router();
 
 router.post("/register", verifyJWT, compalainRegister);
 router.get("/fetch", verifyJWT, verifyADMIN, complainFetch);
+router.get("/userComplains", verifyJWT, userComplain);
 router.post("/getOne", verifyJWT, verifyADMIN, oneComplain);
 router.post("/changeStatus", verifyJWT, verifyADMIN, changeStatus);
 router.post("/addtech", verifyJWT, verifyADMIN, addTech);

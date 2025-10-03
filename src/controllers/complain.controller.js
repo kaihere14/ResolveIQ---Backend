@@ -18,7 +18,6 @@ const compalainRegister = async (req, res) => {
       description,
       status,
       user,
-      verifyOtp,
     });
 
     const saved = await complain.save();
@@ -30,11 +29,10 @@ const compalainRegister = async (req, res) => {
       .status(200)
       .json(new apiResponse(200, complain, "Complain registered successfully"));
   } catch (error) {
-    return res.status(error.statusCode || error.statusCode).json(
-      new ApiError(error.statusCode, {
-        message: error.message || "Internal server error",
-      })
-    );
+    return res.status(error.statusCode || 500).json({
+      message: error.message || "Internal Server error",
+      status: error.statusCode || 500,
+    });
   }
 };
 const complainFetch = async (req, res) => {
@@ -117,6 +115,28 @@ const oneComplain = async (req, res) => {
   }
 };
 
+const userComplain = async (req, res) => {
+  const { user } = req;
+  const id = user._id;
+  try {
+    if (!id) {
+      throw new ApiError(409, "failed to find user linked");
+    }
+    const complain = await Complain.find({ user: id });
+    if (!complain) {
+      throw new ApiError(404, "No complains found");
+    }
+    return res
+      .status(200)
+      .json(new apiResponse(200, complain, "User Complain fetched"));
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      message: error.message || "Internal Server error",
+      status: error.statusCode || 500,
+    });
+  }
+};
+
 const changeStatus = async (req, res) => {
   const { status, id } = req.body;
   console.log(status, id);
@@ -192,4 +212,11 @@ const addTech = async (req, res) => {
       );
   }
 };
-export { compalainRegister, complainFetch, oneComplain, changeStatus, addTech };
+export {
+  compalainRegister,
+  complainFetch,
+  oneComplain,
+  changeStatus,
+  addTech,
+  userComplain,
+};
