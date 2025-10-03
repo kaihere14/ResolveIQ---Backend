@@ -19,7 +19,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/refresh", refreshAccess);
 router.get("/admin", verifyJWT, verifyADMIN, adminCode);
-router.get("/adminProfile", verifyJWT, verifyADMIN, oneUser);
+router.get("/adminProfile", verifyJWT, oneUser);
 router.post("/userPanel", verifyJWT, userCode);
 router.post("/changePass", verifyJWT, changePass);
 router.get("/fetchUser", verifyJWT, fetchUsers);
