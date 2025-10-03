@@ -10,7 +10,7 @@ const port = 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://resolve-iq-cqza.vercel.app"],
   })
 );
 
